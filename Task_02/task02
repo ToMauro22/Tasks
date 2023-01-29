@@ -117,7 +117,7 @@ plot(as.numeric(names(totalMass)), totalMass, type="b", pch=16, xlab="age in day
 points(cyrus3$age[cMass], cyrus3$value[cMass]/1000, pch=16, col='blue')
 title("Beren and Cyrus Age vs Mass")
 legend(1000, 6, legend=c("Beren", "Cyrus"), col=c("red", "blue"), lty=2:2, cex=0.8, title="Kids", text.font=4)
-
+dev.off()
 
 
 
