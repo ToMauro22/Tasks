@@ -1,4 +1,8 @@
 install.packages("learnPopGen")
+library(learnPopGen)
+coalescent.plot()
+coalescent.plot()
+coalescent.plot()
 library(adegenet)
 library(poppr)
 library(dplyr)
@@ -37,6 +41,7 @@ par(mar=c(4,4,1,1), las=1, mgp=c(2,0.25,0), tck=0-0.005, cex.lab=1.25)
 plot(He_lobster, Ho_lobster, xlab="expected H", ylab="observed H", pch=21, bg="gray",xlim=c(0.32, 0.405), ylim=c(0.32,0.405))
 abline(0,1,lty=3)
 abline(lm(Ho_lobster~He_lobster),lty=2, lwd=1.25, col='red')
+
 Fis<-apply(basic_lobster$Fis, MARGIN = 2, FUN = mean, na.rm = TRUE)
 lobster_gen_sub<-popsub(lobster_gen, sublist = c("Ale", "Ber", "Brd","Pad","Sar17","Vig"))
 lobster_fst <- genet.dist(lobster_gen_sub, method = "WC84") %>% round(digits = 3)
@@ -45,12 +50,13 @@ fst.mat<-as.matrix(lobster_fst)
 fst.mat1<-fst.mat[lab_order,]
 fst.mat2<-fst.mat1[, lab_order]
 ind<-which(upper.tri(fst.mat2), arr.ind=TRUE)
-fst.df<-data.frame(Site1=dimnames(fst.mat2)[[2]][ind[,2]], Site2 = dimnames(fst.mat2)[[1]][ind[,1]],Fst=fst.mat2[ind])
+fst.df<-data.frame(Site1=dimnames(fst.mat2)[[2]][ind[,2]], 
+                   Site2 = dimnames(fst.mat2)[[1]][ind[,1]],Fst=fst.mat2[ind])
 fst.df$Site1<-factor(fst.df$Site1, levels = unique(fst.df$Site1))
 fst.df$Site2<-factor(fst.df$Site2, levels = unique(fst.df$Site2))
 fst.df$Fst[fst.df$Fst<0] <- 0
 fst.label<-expression(italic("F")[ST])
-mid<-max(fst.df$FSt)/2
+mid<-max(fst.df$Fst)/2
 ggplot(data=fst.df,aes(x=Site1,y=Site2, fill = Fst))+
   geom_tile(colour="black")+
   geom_text(aes(label=Fst), color = "black", size=3)+
@@ -58,7 +64,7 @@ ggplot(data=fst.df,aes(x=Site1,y=Site2, fill = Fst))+
                      midpoint=mid, name=fst.label,limits=c(0, max(fst.df$Fst)), 
                      breaks=c(0, 0.05, 0.10, 0.15))+
   scale_x_discrete(expand=c(0,0))+
-  scale_y_discrete(expand=c(0,0), position="right")+
+scale_y_discrete(expand=c(0,0), position="right")+
   theme(axis.text=element_text(colour="black",size=10,face="bold"),
         axis.title=element_blank(),
         panel.grid=element_blank(),
@@ -67,3 +73,4 @@ ggplot(data=fst.df,aes(x=Site1,y=Site2, fill = Fst))+
         legend.title=element_text(size=14,face="bold"),
         legend.text=element_text(size=10)
   )
+dev.off()
